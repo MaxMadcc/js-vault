@@ -22,7 +22,8 @@ function displaySha1() {
       }
     });
   }, 800);
-}(function () {
+}
+(function () {
   displaySha1();
   $('a[href="javascript:;"]').each(function () {
     $(this).bind('click', function () {
