@@ -1,0 +1,54 @@
+// ==UserScript==
+// @name         duckduckgo隐私保护跳转百度
+// @namespace    ddg.redirect.baidu
+// @version      1.0
+// @description  添加一个连接，https://duckduckgo.com/?q=!bd 关键词
+// @author       ulrevenge
+// @match        https://duckduckgo.com/?q=*
+// @exclude      https://duckduckgo.com/?q=&t=ffab
+// @grant        unsafeWindow
+// @run-at		document-end
+// ==/UserScript==
+var $ = unsafeWindow.$;
+
+var key_word;
+//var head_change=0;
+(function() {
+    var table_htmls='<div class="header--aside__item bd" style="right:20px;"><a id="baidu_search" href="#">使用百度搜索</a></div>';
+    $(".header--aside.js-header-aside").prepend(table_htmls);
+    //$("head").each(function(){
+    // key_word=$(this).children("script").attr("src");
+    //});
+    //key_word=$("[id='search_form_input']").attr("value");
+    key_word=document.getElementById("search_form_input").value;
+    $("#baidu_search").attr("href","https://duckduckgo.com/?q=!bd "+key_word);
+    //监视DOM变化
+    var callback = function (records){
+        records.map(function(record){
+            //console.log('Mutation type: ' + record.type);
+            //console.log('Mutation target: ' + record.target);
+            $("head").each(function(){
+               key_word=document.getElementById("search_form_input").value;
+            });
+        });
+        $("#baidu_search").attr("href","https://duckduckgo.com/?q=!bd "+key_word);
+        console.log(key_word);
+    };
+    var mo = new MutationObserver(callback);
+    var option = {
+        'childList': true,
+        'subtree': true
+    };
+    mo.observe(document.head, option);
+})();
+//function bind_fun(){
+//    //    head_change = 1;
+//
+//    $("head").each(function(){
+//        key_word=$(this).children("script").attr("src");
+//    });
+//
+//    $("#baidu_search").attr("href",)
+//    //console.log("绑定函数获取的head_change:"+head_change);
+//    console.log("绑定函数获取的key_word:"+key_word);
+//}
