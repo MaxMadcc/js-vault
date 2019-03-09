@@ -31,9 +31,9 @@
 
 // Configs
 let Configs = {
-    'cookie':'',
-    'split':'1',          //默认线程数为1
     'debug_mode'    : false, // 是否开启调试模式
+    'cookie'        :'',
+    'split'         :'1',          //默认线程数为1
     "sync_clipboard": true,  // 是否将下载链接同步到剪贴板，部分浏览器（如 Safari ）不支持
     'use_http'      : false, // 115 下载链接是否从 https 转换为 http （老版本 Aria2 需要）
     "rpc_path"      : 'http://localhost:36666/jsonrpc', // RPC 地址
