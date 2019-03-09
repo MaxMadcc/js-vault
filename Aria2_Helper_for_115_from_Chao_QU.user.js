@@ -211,14 +211,11 @@ let QueueManager = (function ($win, $doc) {
             Aria2RPC.add(this.queue[idx].link,
                 {
                     //'referer': $doc.URL,
-                   'referer': '',
+                   'referer': document.referrer,
                     //'header' : ['Cookie: ' + this.queue[idx].cookie, 'User-Agent: ' + $win.navigator.userAgent]
                     'header' : [//'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0',
                                'User-Agent: '+$win.navigator.userAgent,
                                'Accept: */*',
-                               'Accept-Language: zh-CN',
-                               'Accept-Encoding: gzip, deflate, br',
-                               'Connection: keep-alive',
                                'Cookie: ' + this.queue[idx].cookie,//+'; '+ Configs.cookie,
                                 'Upgrade-Insecure-Requests: 1'
                                ],
