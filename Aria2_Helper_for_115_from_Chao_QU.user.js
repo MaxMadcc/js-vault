@@ -36,9 +36,9 @@ let Configs = {
     'split'         :'1',    //默认线程数为1
     "sync_clipboard": true,  // 是否将下载链接同步到剪贴板，部分浏览器（如 Safari ）不支持
     'use_http'      : false, // 115 下载链接是否从 https 转换为 http （老版本 Aria2 需要）
-    "rpc_path"      : 'http://localhost:36666/jsonrpc', // RPC 地址
+    "rpc_path"      : 'http://localhost:6800/jsonrpc', // RPC 地址
     "rpc_user"      : '',    // RPC 用户名（若设置密码，请填写至 token 项）
-    "rpc_token"     : 'hahahaha111'     // RPC Token ，v1.18.4+ 支持，与用户名认证方式互斥
+    "rpc_token"     : ''     // RPC Token ，v1.18.4+ 支持，与用户名认证方式互斥
 };
 
 // Debug Func
