@@ -132,7 +132,7 @@ let QueueManager = (function ($win, $doc) {
         // build the queue
         this.queue = Array.from(selectedNodes).map(function (node) {
             return {
-                'name'  : node.getAttribute('title'),
+                'out'  : node.getAttribute('title'),
                 'code'  : node.getAttribute('pick_code'),
                 'link'  : null,
 				'cookie' : null,
