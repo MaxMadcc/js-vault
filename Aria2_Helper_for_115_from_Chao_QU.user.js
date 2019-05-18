@@ -117,7 +117,8 @@ let QueueManager = (function ($win, $doc) {
     const STATUS_DOWNLOAD_FAILURE = -1;
     const STATUS_LINK_FETCH_FAILURE = -2;
     const STATUS_UNDOWNLOADABLE = -3;
-
+    // variable
+    var fileOutName;
     // constructor
     function Mgr(options) {
         // options
@@ -131,8 +132,9 @@ let QueueManager = (function ($win, $doc) {
 
         // build the queue
         this.queue = Array.from(selectedNodes).map(function (node) {
+		fileOutName = node.getAttribute('title');
             return {
-                'out'  : node.getAttribute('title'),
+                'name'  : node.getAttribute('title'),
                 'code'  : node.getAttribute('pick_code'),
                 'link'  : null,
 				'cookie' : null,
@@ -210,6 +212,7 @@ let QueueManager = (function ($win, $doc) {
         if (!this.options.copyOnly) {
             Aria2RPC.add(this.queue[idx].link,
                 {
+		    'out':fileOutName, //指定文件名，避免出现文件名空格消失
                     //'referer': $doc.URL,
                    'referer': document.referrer,
                     //'header' : ['Cookie: ' + this.queue[idx].cookie, 'User-Agent: ' + $win.navigator.userAgent]
