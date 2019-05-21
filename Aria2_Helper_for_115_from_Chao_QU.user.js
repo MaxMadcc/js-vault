@@ -118,7 +118,7 @@ let QueueManager = (function ($win, $doc) {
     const STATUS_LINK_FETCH_FAILURE = -2;
     const STATUS_UNDOWNLOADABLE = -3;
     // variable
-    var fileOutName;
+
     // constructor
     function Mgr(options) {
         // options
@@ -132,12 +132,11 @@ let QueueManager = (function ($win, $doc) {
 
         // build the queue
         this.queue = Array.from(selectedNodes).map(function (node) {
-		fileOutName = node.getAttribute('title');
             return {
-                'name'  : node.getAttribute('title'),
+                'out'  : node.getAttribute('title'),
                 'code'  : node.getAttribute('pick_code'),
                 'link'  : null,
-				'cookie' : null,
+                'cookie' : null,
                 // -3: , -2: failed to fetch link, -1: failed to download, 0: unfinished, 1: sent to aria2
                 'status': '1' === node.getAttribute('file_type') ? STATUS_UNFINISHED : STATUS_UNDOWNLOADABLE
             };
@@ -211,22 +210,21 @@ let QueueManager = (function ($win, $doc) {
         // send to aria2
         if (!this.options.copyOnly) {
             Aria2RPC.add(this.queue[idx].link,
-                {
-		    'out':fileOutName, //指定文件名，避免出现文件名空格消失
-                    //'referer': $doc.URL,
-                   'referer': document.referrer,
-                    //'header' : ['Cookie: ' + this.queue[idx].cookie, 'User-Agent: ' + $win.navigator.userAgent]
-                    'header' : [//'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0',
-                               'User-Agent: '+$win.navigator.userAgent,
-                               'Accept: */*',
-                               'Cookie: ' + this.queue[idx].cookie,//+'; '+ Configs.cookie,
-                                'Upgrade-Insecure-Requests: 1'
-                               ],
-                      'split':Configs.split
-                },
-                this.downloadHandler.bind(this, idx),
-                this.errorHandler.bind(this, STATUS_DOWNLOAD_FAILURE, idx)
-            );
+                         {
+                'out':this.queue[idx].out, //指定文件名，避免出现文件名空格消失
+                //'referer': $doc.URL,
+                'referer': 'http://115.com',
+                //'header' : ['Cookie: ' + this.queue[idx].cookie, 'User-Agent: ' + $win.navigator.userAgent]
+                'header' : [//'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0',
+                    'User-Agent: '+$win.navigator.userAgent,
+                    'Accept: */*',
+                    'Cookie: ' + this.queue[idx].cookie,//+'; '+ Configs.cookie
+                ],
+                'split':Configs.split
+            },
+                         this.downloadHandler.bind(this, idx),
+                         this.errorHandler.bind(this, STATUS_DOWNLOAD_FAILURE, idx)
+                        );
         } else {
             // update the status, @todo: another status code?
             this.queue[idx].status = STATUS_SENT_TO_ARIA2;
@@ -235,28 +233,28 @@ let QueueManager = (function ($win, $doc) {
     };
     Mgr.prototype.fetchLinkHandler = function (idx, raw_resp) {
 
-		debug(raw_resp.responseHeaders);
-		let header_arr = raw_resp.responseHeaders.trim().split(/[\r\n]+/);
-		var headerMap = {};
-		header_arr.forEach(function (line) {
-		  var parts = line.split(': ');
-		  var header = parts.shift();
-		  var value = parts.join(': ');
-		  headerMap[header] = value;
-		});
+        debug(raw_resp.responseHeaders);
+        let header_arr = raw_resp.responseHeaders.trim().split(/[\r\n]+/);
+        var headerMap = {};
+        header_arr.forEach(function (line) {
+            var parts = line.split(': ');
+            var header = parts.shift();
+            var value = parts.join(': ');
+            headerMap[header] = value;
+        });
 
-		let set_cookie_string = headerMap["set-cookie"];
-		let final_cookie = set_cookie_string.split(';')[0];
-		debug(final_cookie);
+        let set_cookie_string = headerMap["set-cookie"];
+        let final_cookie = set_cookie_string.split(';')[0];
+        debug(final_cookie);
 
-		let resp = JSON.parse(raw_resp.responseText);
+        let resp = JSON.parse(raw_resp.responseText);
 
         if ('file_url' in resp) {
             // update the link
             this.queue[idx].link = Configs.use_http
                 ? resp.file_url.replace('https://', 'http://') // http only?
-                : resp.file_url.replace('http://', 'https://'); // https
-			this.queue[idx].cookie = final_cookie;
+            : resp.file_url.replace('http://', 'https://'); // https
+            this.queue[idx].cookie = final_cookie;
             this.next();
         } else {
             this.errorHandler.call(this, STATUS_LINK_FETCH_FAILURE, idx, resp);
@@ -266,7 +264,7 @@ let QueueManager = (function ($win, $doc) {
         // get the download link first
         // $win.top.UA$.ajax({
         debug('http://webapi.115.com/files/download?pickcode=' + this.queue[idx].code);
-		GM_xmlhttpRequest({
+        GM_xmlhttpRequest({
             url      : 'http://webapi.115.com/files/download?pickcode=' + this.queue[idx].code,
             method   : 'GET',
             ignoreCache : true,
@@ -284,13 +282,13 @@ let QueueManager = (function ($win, $doc) {
         if (-1 === nextIdx) {
             let report = this.queue.reduce(function (accumulator, file) {
                 switch (file.status) {
-                    // task finished
+                        // task finished
                     case STATUS_SENT_TO_ARIA2:
                         accumulator.finished += 1;
                     case STATUS_DOWNLOAD_FAILURE:
                         accumulator.links.push(file.link);
                         break;
-                    // task finished
+                        // task finished
                     case STATUS_UNDOWNLOADABLE:
                         accumulator.undownloadable += 1;
                         break;
