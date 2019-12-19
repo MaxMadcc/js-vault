@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         115网盘显示文件SHA1,删除分享按钮
 // @namespace    com.115wangpan.showsha1
-// @version      0.2
+// @version      0.3
 // @description  标题意思
 // @author       YIU
 // @match        http*://115.com/*ct=file*
@@ -21,7 +21,11 @@ function displaySha1(){
         //在文件列表iframe内，只取非文件夹类型，并且含有sha1属性的DOM
         $('.list-contents li[file_type!="0"][sha1]',$('iframe[rel="wangpan"]')[0]).each(function(){
             var vsha1 = $(this).attr('sha1');
-            $(this).children('.file-detail').append('<span gmflag>SHA1: ' + vsha1 + '</span>');
+            //$(this).children('.file-detail').append('<span gmflag>SHA1: ' + vsha1 + '</span>');
+            $(this).children('.file-name').children('em').append('<em gmflag1>SHA1: ' + vsha1 + '</em>');
+            $(this).children('.file-name').css('top','5px');
+            $(this).children('.file-name').css('height','100px');
+            $(this).children('.file-name').children('em').css('height','100px');
         });
         //禁止重新显示
         canDisplay = 0;
@@ -40,16 +44,18 @@ function bindfun(e){
 
         setTimeout(function(){
 
-            if($('.list-contents li[file_type!="0"][sha1] span:not([gmflag])',e.target).parents('li').length > 0)
+            if($('.list-contents li[file_type!="0"][sha1] em:not([gmflag1])',e.target).parents('li').length > 0)
             {
                 displaySha1();
             }
             //删除分享按钮
             $('[menu="public_share"]').remove();
+            //删除出现"上传 浏览"字眼bug
+            $('input[type="file"]').remove();
 
             canDisplay = 0;
 
-        },800);
+        },100);
     }
 
 }
