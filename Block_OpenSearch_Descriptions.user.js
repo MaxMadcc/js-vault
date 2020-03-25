@@ -2,14 +2,9 @@
 // @name            [ALL] Block OpenSearch Descriptions (OSD)
 // @author          gregsadetsky
 // @description     Block sites from adding search engines to Chrome.
-// @downloadURL
-// @grant
-// @icon
 // @include         http*://*
-// @require
 // @run-at          document-start
-// @updateURL
-// @version         2.0
+// @version         0.0.5
 // ==/UserScript==
 
 //document.querySelector('[type="application/opensearchdescription+xml"]').remove();
