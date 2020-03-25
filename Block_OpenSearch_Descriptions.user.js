@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            [ALL] Block OpenSearch Descriptions (OSD)
-// @author
+// @author          gregsadetsky
 // @description     Block sites from adding search engines to Chrome.
 // @downloadURL
 // @grant
