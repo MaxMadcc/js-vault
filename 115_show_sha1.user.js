@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         115网盘显示文件SHA1,删除分享按钮
+// @name         115网盘显示文件SHA1
 // @namespace    com.115wangpan.showsha1
 // @version      0.5
 // @description  标题意思
